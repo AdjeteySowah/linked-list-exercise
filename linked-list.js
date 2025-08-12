@@ -1,8 +1,31 @@
 function createList() {
+   let list;
+
    let headNode = null;
+
    let tailNode = null;
 
-   return {
+   function assignIndex() {
+      let index = 0;
+      const stack = [headNode];
+
+      while (stack.length > 0) {
+         let current = stack.pop();
+
+         if (current) {
+            current.index = index;
+         }
+
+         for (let key in current) {
+            if (key === 'next' && current[key] !== null) {
+               index++;
+               stack.push(current[key]);
+            }
+         }
+      }
+   }
+
+   list = {
       append(value) {
          let newNode = {
             prev: null,
@@ -19,7 +42,9 @@ function createList() {
             tailNode.next = newNode;
             newNode.prev = tailNode;
             tailNode = newNode;
-         }    
+         } 
+         
+         assignIndex();
       },
 
       prepend(value) {
@@ -37,6 +62,8 @@ function createList() {
             headNode.prev = newNode;
             headNode = newNode;
          }
+
+         assignIndex();
       },
 
       size() {
@@ -63,15 +90,33 @@ function createList() {
       },
 
       head() {
-
+         return headNode.value;
       },
 
       tail() {
-
+         return tailNode.value;
       },
 
       at(index) {
+         const stack = [headNode];
 
+         while (stack.length >= 0) {
+            let current = stack.pop();
+
+            if (current) {
+               if (current.index === index) {
+                  return current.value;
+               }
+            } else {
+               throw new Error(`Oops! The list is empty or doesn’t have an index at position ${index}`);
+            }
+
+            for (let key in current) {
+               if (key === 'next' && current[key] !== null) {
+                  stack.push(current[key]);
+               }
+            }
+         }
       },
 
       pop() {
@@ -90,6 +135,8 @@ function createList() {
 
       },
    }
+
+   return list;
 }
 
 
