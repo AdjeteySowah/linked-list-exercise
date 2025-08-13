@@ -120,7 +120,16 @@ function createList() {
       },
 
       pop() {
-
+         if (headNode === null) {
+            return;
+         } else {
+            if (tailNode.prev === null) {
+               tailNode = tailNode.prev;
+            } else {
+               tailNode.prev.next = null;
+               tailNode = tailNode.prev;
+            }
+         }
       },
 
       contains(value) {
