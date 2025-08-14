@@ -206,15 +206,82 @@ function createList() {
 
          return listInStringForm;
       },
+
+      insertAt(value, index) {
+         let newNode = {};
+         const stack = [headNode];
+
+         while (stack.length >= 0 && newNode !== null) {
+            let current = stack.pop();
+
+            if (current) {
+               if (current.index === index) {
+                  if (index === 0) {
+                     current.prev = {};
+                     current.prev.prev = null;
+                     current.prev.value = value;
+                     current.prev.next = current;
+                     headNode = current.prev;
+                  } else {
+                     newNode.prev = current.prev;
+                     newNode.value = value;
+                     newNode.next = current;
+                     
+                     current.prev.next = newNode;
+                     current.prev = newNode;
+                  }
+                  
+                  newNode = null;
+               }
+            } else {
+               throw new Error(`Oops! Can't insert. Use list.append(value) instead.`);
+            }
+
+            for (let key in current) {
+               if (key === 'next' && current[key] !== null) {
+                  stack.push(current[key]);
+               }
+            }
+         }
+
+         assignIndex();
+      },
+
+      removeAt(index) {
+         let nodeRemoved = false;
+         const stack = [headNode];
+
+         while (stack.length >= 0 && nodeRemoved === false) {
+            let current = stack.pop();
+
+            if (current) {
+               if (current.index === index) {
+                  if (index === 0 && current.next !== null) {
+                     current.next.prev = null;
+                     headNode = current.next;
+                  } else if (index === 0) {
+                     headNode = current.next;
+                  } else {
+                     current.prev.next = current.next;
+                     current.next.prev = current.prev;
+                  }
+
+                  nodeRemoved = true;
+               }
+            } else {
+               throw new Error(`Oops! List is empty or list does not accomodate items up to index ${index}`);
+            }
+
+            for (let key in current) {
+               if (key === 'next' && current[key] !== null) {
+                  stack.push(current[key]);
+               }
+            }
+         }
+
+         assignIndex();
+      },
    }
 
    return list;
-}
-
-
-function node(value = null, next = null) {
-   return {
-      value,
-      next,
-   }
 }
