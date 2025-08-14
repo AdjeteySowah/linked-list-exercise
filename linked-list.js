@@ -1,4 +1,4 @@
-function createList() {
+export function createList() {
    let list;
 
    let headNode = null;
